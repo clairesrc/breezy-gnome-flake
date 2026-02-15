@@ -128,6 +128,11 @@ stdenv.mkDerivation {
     mkdir -p $extensionDir
     unzip -q breezydesktop@xronlinux.com.shell-extension.zip -d $extensionDir
 
+    # Compile extension-local schemas (GNOME Shell loads these directly)
+    if [ -d $extensionDir/schemas ]; then
+      glib-compile-schemas $extensionDir/schemas
+    fi
+
     # --- GSettings schema ---
     mkdir -p $out/share/glib-2.0/schemas
     cp breezy_ui/data/glib-2.0/schemas/*.gschema.xml $out/share/glib-2.0/schemas/
