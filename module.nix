@@ -51,6 +51,10 @@ in
         ExecStart = "${cfg.package}/bin/xrDriver";
         Restart = "always";
         Environment = "LD_LIBRARY_PATH=${cfg.package}/lib/xr_driver";
+        # Create config and state directories expected by xr_driver and breezy UI.
+        # The upstream setup script creates these, but we skip it on NixOS.
+        ConfigurationDirectory = "xr_driver";
+        StateDirectory = "xr_driver";
       };
     };
   };
