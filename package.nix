@@ -196,7 +196,9 @@ stdenv.mkDerivation {
     makeWrapper ${pythonEnv}/bin/python3 $out/bin/breezydesktop \
       "''${gappsWrapperArgs[@]}" \
       --add-flags "$out/libexec/breezydesktop-unwrapped" \
+      --add-flags "--skip-verification" \
       --set APPDIR "$out/share" \
+      --set BINDIR "$out/bin" \
       --prefix XDG_DATA_DIRS : "$out/share" \
       --prefix GSETTINGS_SCHEMA_DIR : "$schemaDir" \
       --prefix GI_TYPELIB_PATH : "${lib.makeSearchPath "lib/girepository-1.0" [
