@@ -38,6 +38,18 @@ in
     # udev rules for XR glasses hardware access
     services.udev.packages = lib.mkIf cfg.enableUdevRules [ cfg.package ];
 
+    # Supplement the upstream udev rules with GROUP assignment.
+    # The upstream rules rely on TAG+="uaccess" which depends on logind ACLs;
+    # on NixOS the ACLs may not be applied reliably, so we also grant access
+    # via the "users" group.
+    services.udev.extraRules = lib.mkIf cfg.enableUdevRules ''
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="35ca", GROUP="users", MODE="0660"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="1bbb", GROUP="users", MODE="0660"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="04d2", GROUP="users", MODE="0660"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="3318", GROUP="users", MODE="0660"
+      KERNEL=="uinput", SUBSYSTEM=="misc", GROUP="users", MODE="0660"
+    '';
+
     # Ensure uinput module is loaded (needed for virtual input devices)
     boot.kernelModules = [ "uinput" ];
 
