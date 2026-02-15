@@ -62,6 +62,12 @@ in
         Type = "simple";
         ExecStart = "${cfg.package}/bin/xrDriver";
         Restart = "always";
+        # Space out restart attempts so a missing-device exit doesn't burn
+        # through systemd's start-rate limit in seconds.
+        RestartSec = 5;
+        # Disable the start-rate limit entirely — the driver is expected to
+        # fail when no glasses are connected and should keep retrying.
+        StartLimitIntervalSec = 0;
         Environment = "LD_LIBRARY_PATH=${cfg.package}/lib/xr_driver";
         # Create config and state directories expected by xr_driver and breezy UI.
         # The upstream setup script creates these, but we skip it on NixOS.
